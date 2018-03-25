@@ -3,19 +3,22 @@
 
 
 import Vue from 'vue'
+import Vuex from 'vuex'
 import App from './App'
 import VueHead from 'vue-head'
+import store from './store'
 
+Vue.use(Vuex)
 Vue.use(VueHead)
 
 
 
 /* eslint-disable no-new */
 
-
-new Vue({
+var vm = new Vue({
+  store,
   el: '#app',
   template: '<App/>',
   components: { App }
 })
-
+export default vm

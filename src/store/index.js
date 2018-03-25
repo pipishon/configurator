@@ -5,17 +5,11 @@ import * as mutations from './mutations'
 
 Vue.use(Vuex)
 
+
 var state = {
-  groups: [{
-    name: 'group1',
-    lines: [
-      { name: 'line1'},
-      { name: 'line2'},
-    ],
-    groups: []
-  }],
-  isPopupVisible: false,
-  lineToEdite: {}
+  rules: {
+  },
+  css: '.test-content { background-color: red; }'
 }
 
 const debug = process.env.NODE_ENV !== 'production'

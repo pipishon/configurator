@@ -1,3 +1,2 @@
-export const isPopupVisible = state => state.isPopupVisible
-export const lineToEdite = state => state.lineToEdite
-export const groups = state => state.groups
+export const css = state => state.css
+export const rules = state => state.rules

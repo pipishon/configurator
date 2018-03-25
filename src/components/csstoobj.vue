@@ -2,15 +2,15 @@
   <div class="csstoobj">
     <div class="css form-group">
       <label>css</label>
-      <editor v-model="css" lang="css" theme="chrome"></editor>
+      <editor :value="css" @input="updateHead" lang="css" theme="chrome"></editor>
     </div>
     <div class="obj">
-      <div v-for="(styles, selector) in objects">
+      <div v-for="(styles, selector) in rules">
         <div class="form-group">
-          <input class="form-control" :value="selector" type="text">
+          <input class="form-control" @input="changeSelector({selector: selector, event: $event})" :value="selector" type="text">
           <div class="rules" v-for="(value, name) in styles">
             <label>{{name}}</label>
-            <input class="form-control" @input="changeCSS(selector, name, value, $event)" :value="value" type="text">
+            <input class="form-control" @input="changeStyle({selector: selector, name: name, event: $event})" :value="value" type="text">
           </div>
         </div>
       </div>
@@ -25,16 +25,12 @@ var csstree = require('css-tree')
 import editor from 'vue2-ace-editor'
 import 'brace/mode/css'
 import 'brace/theme/chrome'
+import {mapMutations, mapGetters} from 'vuex'
 
 export default {
   name: 'cssobj',
   data () {
     return {
-      state: state,
-      css: '.test-content { background-color: red; }',
-      obj: {},
-      parser: null,
-      objects: {},
       sheet: null
     }
   },
@@ -49,71 +45,17 @@ export default {
     editor
   },
   computed: {
+    ...mapGetters(['css', 'rules'])
   },
   watch: {
-    css (val) {
-      this.onCssUpdate()
-    },
   },
   methods: {
-    onCssUpdate () {
+    updateHead(css) {
+      this.updateCss(css)
       this.$emit('updateHead')
-      this.sheet = document.getElementById('css-styles')
-      this.objects = {}
-
-      var rules = this.sheet.sheet.rules
-      for (var r in rules) {
-        if (typeof(rules[r].selectorText) != 'undefined') {
-          var rule = rules[r]
-          var selector = rule.selectorText
-          var styles = []
-          if (typeof(this.objects[selector]) == 'undefined') {
-            this.$set(this.objects, selector, {})
-          }
-          if (typeof(rule.style) != 'undefined') {
-            for (var i = 0; i < rule.style.length; i++) {
-              var name = rule.style[i]
-              var value = rule.style.getPropertyValue(name)
-              this.$set(this.objects[selector], name, value)
-              //styles.push({name, value})
-            }
-          }
-        }
-      }
+      this.onCssUpdate(css)
     },
-    changeCSS (selector, name, val, event) {
-      var new_val = event.target.value
-      this.objects[selector][name] = new_val
-      var ruleRgxp = new RegExp(selector + '[\\S\\s]*{[\\S\\s]*}', 'g')
-      var ruleMatches = this.css.match(ruleRgxp)
-      if (ruleMatches === null) {
-        this.css += '\r\n' + selector + '{\r\n';
-        this.css += name + ': ' + new_val + ';\r\n}';
-      } else {
-        var oldRuleText = ruleMatches[0]
-        var styleRgxp = new RegExp(name + '[\\S\\s]*;', 'g')
-        var styleMatches = oldRuleText.match(styleRgxp)
-        if (styleMatches === null) {
-          return
-        }
-        var oldStyleText = styleMatches[0]
-
-        var newStyleText = oldStyleText.replace(/:.*;/, ':' + new_val + ';')
-        var newRuleText = oldRuleText.replace(oldStyleText, newStyleText)
-        this.css = this.css.replace(oldRuleText, newRuleText)
-      }
-    },
-    createCSS () {
-      var css = ''
-      this.obj.map(function (el) {
-        css = css + el.selector + '{\n'
-        el.rules.map(function (rule) {
-          css = css + '    ' + rule.directive + ': ' + rule.value + ';\n'
-        })
-        css = css + '}\n'
-      })
-      this.css = css
-    }
+    ...mapMutations(['updateCss', 'changeSelector', 'onCssUpdate', 'changeStyle'])
   },
   mounted () {
     this.sheet = document.createElement('style')
@@ -124,7 +66,7 @@ export default {
     if (this.parser == null) {
       this.parser = new cssjs()
     }
-    this.onCssUpdate()
+    this.onCssUpdate(this.css)
   }
 }
 </script>
