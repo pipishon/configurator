@@ -1,0 +1,51 @@
+@font-face {
+  font-family: 'croppericons';
+  src: url('../fonts/icons.eot?48832182');
+  src: url('../fonts/icons.eot?48832182#iefix') format('embedded-opentype'),
+       url('../fonts/icons.woff2?48832182') format('woff2'),
+       url('../fonts/icons.woff?48832182') format('woff'),
+       url('../fonts/icons.ttf?48832182') format('truetype'),
+       url('../fonts/icons.svg?48832182#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+ 
+[class^="icon-"]:before, [class*=" icon-"]:before {
+  font-family: "croppericons";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  text-align: center;
+  font-variant: normal;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+ 
+.icon-close:before { content: '\e800'; } /* '' */
+.icon-italic:before { content: '\e801'; } /* '' */
+.icon-search:before { content: '\e802'; } /* '' */
+.icon-delete:before { content: '\e803'; } /* '' */
+.icon-text:before { content: '\e804'; } /* '' */
+.icon-uppercase:before { content: '\e806'; } /* '' */
+.icon-xh2:before { content: '\e807'; } /* '' */
+.icon-xl2:before { content: '\e808'; } /* '' */
+.icon-arrow:before { content: '\e809'; } /* '' */
+.icon-underline:before { content: '\e80b'; } /* '' */
+.icon-images:before { content: '\e80c'; } /* '' */
+.icon-settings:before { content: '\e80d'; } /* '' */
+.icon-filters:before { content: '\e80e'; } /* '' */
+.icon-copy:before { content: '\e80f'; } /* '' */
+.icon-crop:before { content: '\e810'; } /* '' */
+.icon-menu:before { content: '\e811'; } /* '' */
+.icon-text-left:before { content: '\e813'; } /* '' */
+.icon-bold:before { content: '\e814'; } /* '' */
+.icon-through:before { content: '\e815'; } /* '' */
+.icon-text-center:before { content: '\e816'; } /* '' */
+.icon-text-right:before { content: '\e817'; } /* '' */
+.icon-layer:before { content: '\e818'; } /* '' */
+.icon-reload:before { content: '\e819'; } /* '' */
+.icon-save:before { content: '\e81a'; } /* '' */
+.icon-attache:before { content: '\e81b'; } /* '' */
