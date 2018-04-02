@@ -1,30 +1,19 @@
 <template>
-  <div class="rightpanel">
-    <div v-if="typeof(line.css) != 'undefined'">
-      <div class="title">{{line.name}}</div>
-    <div class="text-settings">
-      <span >Text styles</span>
-      <div>
-        <button class="btn btn-default" @click="onButtonClick('text-align','left', 'left')" :class="{active: line.css['text-align'] == 'left'}">left</button>
-        <button class="btn btn-default" @click="onButtonClick('text-align','center', 'center')" :class="{active: line.css['text-align'] == 'center'}">center</button>
-        <button class="btn btn-default" @click="onButtonClick('text-align','right', 'right')" :class="{active: line.css['text-align'] == 'right'}">right</button>
-      </div>
-      <div>
-        <button class="btn btn-default" @click="onButtonClick('text-transform','uppercase', 'none')" :class="{active: line.css['text-transform'] == 'uppercase'}">Tt</button>
-        <button class="btn btn-default" @click="onButtonClick('font-weight','bold', 'normal')" :class="{active: line.css['font-weight'] == 'bold'}">B</button>
-        <button class="btn btn-default" @click="onButtonClick('font-style','italic', 'normal')" :class="{active: line.css['font-style'] == 'italic'}">I</button>
-        <button class="btn btn-default" @click="onButtonClick('text-decoration','line-through', 'none')" :class="{active: line.css['text-decoration'] == 'line-through'}">S</button>
-        <button class="btn btn-default" @click="onButtonClick('text-decoration','underline', 'none')" :class="{active: line.css['text-decoration'] == 'underline'}">U</button>
-      </div>
-      <div class="col-md-6">
-        <label> Font size </label>
-        <input v-model="line.css['font-size']" @keydown="onKeyDown($event, 'font-size')" title="font size" class="fontsize-input" type="text" />
-      </div>
-      <div class="col-md-6">
-        <label> Line height </label>
-        <input v-model="line.css['line-height']" @keydown="onKeyDown($event, 'line-height')" title="line height" class="fontsize-input" type="text" />
-      </div>
-      </div>
+<div class="rightpanel">
+    <div class="title">{{activeRule.selector}}</div>
+    <div class="line">
+      <span>background-color</span>
+      <span @click="colorName = 'background-color'; showColorPicker = true" class="color-preview" :style="{'background-color':activeRule.styles['background-color']}"></span>
+    </div>
+    <div class="line">
+      <span>color</span>
+      <span @click="colorName = 'color'; showColorPicker = true" class="color-preview" :style="{'background-color':activeRule.styles['color']}"></span>
+    </div>
+    <div v-show="showColorPicker" class="color-picker">
+      <div class="color-picker-title">{{colorName}}</div>
+      <colorpicker  :value="activeRule.styles[colorName]" @click.native.stop
+           @input="onColorChange(arguments[0], colorName)" >
+      </colorpicker>
     </div>
 </div>
 
@@ -32,29 +21,35 @@
 
 <script>
 
+import {mapMutations, mapGetters} from 'vuex'
+import Chrome from './color/Chrome'
+
 export default {
   name: 'rightpanel',
   data () {
     return {
-      state: state
+      showColorPicker: false,
+      colorName: 'color'
     }
   },
   computed: {
-    line () {
-      return state.activeLine
-    }
+    ...mapGetters(['activeRule'])
+  },
+  components: {
+    colorpicker: Chrome,
   },
   watch: {
-    line: {
-      handler: function (val) {
-        if (this.line.selector.length > 3) {
-          $(this.line.selector).css(val.css)
-        }
-      },
-      deep: true
-    }
   },
   methods: {
+    onColorChange(val, name) {
+      var newColor = ''
+      if (val.a !== 1) {
+        newColor = 'rgba(' + Object.values(val.rgba).join(',') + ')'
+      } else {
+        newColor = val.hex
+      }
+      this.changeStyle({selector: this.activeRule.selector, name: name, val: newColor})
+    },
     onButtonClick(name, value, clear) {
       var css = this.line.css;
       (css[name] != value) ? css[name] = value : css[name] = clear
@@ -82,6 +77,7 @@ export default {
       this.line.css[name] = val + unit
       this.$forceUpdate()
     },
+    ...mapMutations(['changeStyle'])
   },
   mounted () {
   }
@@ -96,6 +92,7 @@ export default {
   right: 0;
   top: 0;
   background-color: white;
+  padding: 15px;
 }
 .text-settings {
   padding: 20px;
@@ -109,8 +106,27 @@ export default {
   background-color: black;
 }
 .title {
-  padding: 8px;
+  padding-bottom: 8px;
   color: gray;
   border-bottom: 1px solid gray;
+}
+.color-preview {
+  border: 1px solid lightgray;
+  width: 20px;
+  height: 20px;
+  display: block;
+  float: right;
+  margin-right: 10px;
+}
+.color-picker {
+  background: white;
+  padding: 10px;
+  position: absolute;
+  top: 40px;
+  left: -180px;
+  border: 1px solid lightgray;
+}
+.line {
+  margin: 20px 0;
 }
 </style>

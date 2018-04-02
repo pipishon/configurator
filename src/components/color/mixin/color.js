@@ -1,7 +1,6 @@
 import tinycolor from 'tinycolor2'
 
 function _colorChange (data, oldHue) {
-  var alpha = data && data.a
   var color
 
   // hsl is better than hex between conversions
@@ -13,7 +12,11 @@ function _colorChange (data, oldHue) {
     color = tinycolor(data)
   }
 
-  if (color) color.setAlpha(alpha || 1)
+  // var alpha = color && color._a
+
+  //console.log(color)
+  //if (color) color.setAlpha(alpha || 1)
+
 
   var hsl = color.toHsl()
   var hsv = color.toHsv()

@@ -9,6 +9,17 @@ Vue.use(Vuex)
 var state = {
   rules: {
   },
+  activeRule: {
+    selector: '',
+    styles: {
+      'background-color': '',
+      'color': '',
+    },
+    defaultStyles: {
+      'background-color': 'white',
+      'color': 'white',
+    }
+  },
   css: '.test-content { background-color: red; }'
 }
 

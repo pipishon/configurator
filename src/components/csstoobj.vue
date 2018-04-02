@@ -4,7 +4,7 @@
       <label>css</label>
       <editor :value="css" @input="updateHead" lang="css" theme="chrome"></editor>
     </div>
-    <div class="obj">
+    <div class="obj" v-if="false">
       <div v-for="(styles, selector) in rules">
         <div class="form-group">
           <input class="form-control" @input="changeSelector({selector: selector, event: $event})" :value="selector" type="text">

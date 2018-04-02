@@ -36,6 +36,9 @@ export const onCssUpdate = (state, css) => {
         for (var i = 0; i < rule.style.length; i++) {
           var name = rule.style[i]
           var value = rule.style.getPropertyValue(name)
+          if (selector === state.activeRule.selector && typeof(state.activeRule.styles[name]) !== 'undefined') {
+            state.activeRule.styles[name] = value
+          }
           vm.set(state.rules[selector], name, value)
           //styles.push({name, value})
         }
@@ -44,8 +47,11 @@ export const onCssUpdate = (state, css) => {
   }
 }
 
-export const changeStyle = (state, { selector, name, event }) => {
-  var new_val = event.target.value
+export const changeStyle = (state, { selector, name, val }) => {
+  var new_val = val
+  if (typeof(state.rules[selector]) === 'undefined') {
+    return
+  }
   state.rules[selector][name] = new_val
   var ruleRgxp = new RegExp(selector + '[\\S\\s]*{[\\S\\s]*}', 'g')
   var ruleMatches = state.css.match(ruleRgxp)
@@ -56,6 +62,14 @@ export const changeStyle = (state, { selector, name, event }) => {
     var styleRgxp = new RegExp('[{\\s]+' + name + '[\\S\\s]*;', 'g')
     var styleMatches = oldRuleText.match(styleRgxp)
     if (styleMatches === null) {
+      var pos = oldRuleText.lastIndexOf(';') + 1 // end last rule position
+      if (pos == 0) {
+        pos = oldRuleText.indexOf('{') + 1 // end last rule position
+      }
+      var s = oldRuleText
+      var newStyle = '\r\n    ' + name + ': ' + new_val + ';'
+      newRuleText = [s.slice(0, pos), newStyle, s.slice(pos)].join('')
+      state.css = state.css.replace(oldRuleText, newRuleText)
       return
     }
     var oldStyleText = styleMatches[0]
@@ -63,5 +77,16 @@ export const changeStyle = (state, { selector, name, event }) => {
     var newStyleText = oldStyleText.replace(/:.*;/, ':' + new_val + ';')
     var newRuleText = oldRuleText.replace(oldStyleText, newStyleText)
     state.css = state.css.replace(oldRuleText, newRuleText)
+  }
+}
+
+export const setActiveRule = (state, { styles, selector }) => {
+  state.activeRule.selector = selector
+  state.activeRule.styles = JSON.parse(JSON.stringify(state.activeRule.defaultStyles))
+  var activeStyles = state.activeRule.styles
+  for (name in styles) {
+    if (typeof (activeStyles[name]) !== 'undefined') {
+      activeStyles[name] = styles[name]
+    }
   }
 }
