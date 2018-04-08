@@ -50,6 +50,11 @@ export default {
   watch: {
   },
   methods: {
+    hoverOverElement() {
+      $(document).on('mouseover', '*', function (event) {
+        console.log(event.target)
+      })
+    },
     updateHead(css) {
       this.updateCss(css)
       this.$emit('updateHead')
@@ -67,11 +72,29 @@ export default {
       this.parser = new cssjs()
     }
     this.onCssUpdate(this.css)
+    $(document).on('mouseover', '*', function (event) {
+      var self = this
+
+      event.stopPropagation()
+      $('.on-hover').removeClass('on-hover')
+      setTimeout(function () {
+        $(self).addClass('on-hover')
+        var nodes = []
+        while (self.nodeName !== 'BODY') {
+          nodes.push(self.nodeName)
+          self = self.parentNode
+        }
+        console.log(nodes.reverse().join('>'))
+      }, 10)
+    })
   }
 }
 </script>
 
-<style scoped>
+<style>
+.on-hover {
+  outline: 3px solid lightblue;
+}
 .obj {
   padding: 10px;
   height: 90vh;
