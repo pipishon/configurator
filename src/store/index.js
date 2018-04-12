@@ -7,6 +7,7 @@ Vue.use(Vuex)
 
 
 var state = {
+  isOnChoose: true,
   rules: {
   },
   activeRule: {

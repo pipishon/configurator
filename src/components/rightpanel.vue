@@ -1,5 +1,6 @@
 <template>
 <div class="rightpanel">
+  <button @click="onChoose">Start choose</button>
     <div class="title">{{activeRule.selector}}</div>
     <div class="line">
       <span>background-color</span>
@@ -77,7 +78,7 @@ export default {
       this.line.css[name] = val + unit
       this.$forceUpdate()
     },
-    ...mapMutations(['changeStyle'])
+    ...mapMutations(['changeStyle', 'onChoose'])
   },
   mounted () {
   }

@@ -47,6 +47,15 @@ export const onCssUpdate = (state, css) => {
   }
 }
 
+export const offChoose = (state) => {
+  state.isOnChoose = false
+}
+
+export const onChoose = (state) => {
+  console.log('onChoose')
+  state.isOnChoose = true
+}
+
 export const changeStyle = (state, { selector, name, val }) => {
   var new_val = val
   if (typeof(state.rules[selector]) === 'undefined') {
